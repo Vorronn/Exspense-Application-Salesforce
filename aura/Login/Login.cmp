@@ -1,0 +1,26 @@
+<aura:component implements="flexipage:availableForAllPageTypes, lightning:isUrlAddressable" access="global">
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+	<lightning:navigation aura:id="navService"/>
+
+	<div class="slds-theme_info slds-p-vertical_xx-large">
+		<div class="slds-card slds-container--center slds-container--small">
+			<div class="slds-box slds-box_xx-small slds-theme_default">
+				<!-- Название компонента -->
+				<div class="slds-m-horizontal_xx-large slds-m-bottom_xx-large">
+					<div class="page-section page-header slds-align_absolute-center">
+						<h1 class="slds-text-heading_medium slds-m-bottom_medium">Expenses</h1>
+					</div>
+					<!-- Название компонента -->
+					<div class="slds-m-top_medium">
+						<lightning:input type="email" name="inputEmail" placeholder="Enter your username" label="Login"/>
+						<lightning:input type="password" label="Password" name="inputPassword" placeholder="Password"/>
+					</div>
+					<div class="slds-m-top_large">
+						<lightning:button class="slds-button_stretch" variant="brand" label="Login" title="Brand action" onclick="{! c.handleClick }" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</aura:component>	
