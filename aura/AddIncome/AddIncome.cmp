@@ -1,0 +1,46 @@
+<aura:component controller="AddIncomeController" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable, force:hasRecordId, force:appHostable" access="global" >
+	<aura:handler name="init" value="{! this }" action="{! c.init }"/>
+
+    <!-- Аттрибуты заполнения формы -->
+    <aura:attribute name="amount" type="Decimal"/>
+	<!-- Аттрибуты заполнения формы -->
+	
+    <!-- Аттрибут получения данных со страницы ExpnesePage -->
+    <aura:attribute name="users" type="Object[]" default="{}"/>
+	<!-- Аттрибут получения данных со страницы ExpnesePage -->
+	
+    <!-- Данные для навигации между компонентами -->
+	<aura:attribute name="pageReference" type="Object"/>
+	<lightning:navigation aura:id="navService"/>
+	<!-- Данные для навигации между компонентами -->
+
+	<div class="slds-card slds-container--center slds-container--small">
+		<div class="slds-box slds-box_xx-small slds-theme_default">
+
+			<div class="slds-m-horizontal_xx-large slds-m-bottom_xx-large">
+				<!-- Название компонента -->
+				<div class="page-section page-header slds-align_absolute-center">
+					<h1 class="slds-text-heading_medium slds-m-bottom_medium">Balance replenishment</h1>
+				</div>
+				<!-- Название компонента -->
+
+				<!-- Форма пополения баланса-->
+				<div class="slds-m-top_medium">
+					<lightning:input type="number" label="Amount"
+					name="expenseamount"
+					min="0.1"
+					formatter="currency"
+					step="0.01"
+					value="{!v.amount}"/>
+				</div>
+
+				<div class="slds-button_full-width slds-m-top_large">
+					<lightning:button class="slds-button_stretch" label="Cancel" onclick="{!c.clickCancel}"/>
+					<lightning:button class="slds-button_stretch" variant="brand" label="Adding" onclick="{!c.clickAdding}"/>
+				</div>
+				<!-- Форма пополения баланса-->
+			</div>
+		</div>
+	</div>
+
+</aura:component>

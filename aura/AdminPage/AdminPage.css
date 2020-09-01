@@ -1,0 +1,34 @@
+.THIS .summ-color{
+    background-color: #f5f1c0;
+}
+.THIS .header-color{
+    background-color: #c1f3ff;
+}
+.THIS .monthly-color{
+    background-color: #c5c4c4;
+}
+.THIS .balance-color{
+    background-color: #8baafd;
+}
+
+.THIS tr:nth-child(even) { 
+	background-color: #c1f3ff;
+} 
+
+.THIS .red-text{
+	color: red;
+}
+
+.THIS .blue-text{
+	color: blue;
+}
+
+.THIS .size-max{
+	font-size: 20px;
+}
+.THIS .size-min{
+	font-size: 16px;
+}
+.THIS .text-weight{
+	font-weight: bold;
+}

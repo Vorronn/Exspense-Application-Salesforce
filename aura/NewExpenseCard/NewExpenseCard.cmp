@@ -1,0 +1,56 @@
+<aura:component controller="NewExpenseCardController" implements="flexipage:availableForAllPageTypes,lightning:isUrlAddressable, force:hasRecordId,force:appHostable" access="global" >
+    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+
+    <!-- Аттрибуты заполнения формы -->
+    <aura:attribute name="amount" type="Decimal"/>
+    <aura:attribute name="currentDate" type="Date"/>
+    <aura:attribute name="description" type="String"/>
+    <!-- Аттрибуты заполнения формы -->
+
+    <!-- Аттрибут получения данных со страницы ExpnesePage -->
+    <aura:attribute name="users" type="Object[]" default="{}"/>
+    <!-- Аттрибут получения данных со страницы ExpnesePage -->
+
+    <!-- Данные для навигации между компонентами -->
+    <aura:attribute name="pageReference" type="Object"/>
+    <lightning:navigation aura:id="navService"/>
+    <!-- Данные для навигации между компонентами -->
+
+    <div class="slds-box slds-box_small slds-theme_default">
+        <!-- Название формы -->
+        <div class="page-section page-header slds-align_absolute-center slds-border_bottom">
+            <h1 class="slds-text-heading_medium slds-m-bottom_medium">New Expense Card</h1>
+        </div>
+        <!-- Название формы -->
+
+        <!-- Форма для создания Expense Card -->
+        <div class="slds-m-vertical_medium">
+            <lightning:recordEditForm   aura:id="recordEditForm" 
+                                        objectApiName="Expense_Card__c"
+                                        onsuccess="{!c.handleSuccess}"
+                                        onerror="{!c.handleError}">
+
+				<lightning:messages />
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_4-of-12">
+						<lightning:inputField fieldName="Amount__c" value="{!v.amount}"/>
+						<lightning:inputField fieldName="Card_Date__c" value="{!v.currentDate}"/>
+					</div>
+				</div>
+				
+				<lightning:inputField fieldName="Description__c" value="{!v.description}"/>
+
+                <div class="slds-clearfix slds-border_top slds-m-top_medium">
+                    <div class="slds-float_right slds-m-top_medium">
+						<lightning:button label="Cancel" onclick="{!c.clickCancel}"/>
+                        <lightning:button variant="brand" label="Save" onclick="{!c.clickSave}"/>
+                    </div>
+                </div>
+
+            </lightning:recordEditForm>
+        </div>
+        <!-- Форма для создания Expense Card -->
+
+    </div>
+
+</aura:component>

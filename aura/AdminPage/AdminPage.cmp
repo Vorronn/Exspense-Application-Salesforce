@@ -1,0 +1,126 @@
+<aura:component controller="AdminPageController" implements="flexipage:availableForAllPageTypes, lightning:isUrlAddressable, force:hasRecordId" access="global">
+
+	<aura:handler name="init" value="{! this }" action="{! c.init }"/>
+	<aura:handler event="force:refreshView" action="{! c.init}" />
+
+
+	<!-- Аттрибуты для динамического заполнения таблицы -->
+	<aura:attribute name="listNameYear" type="List"/>
+	<aura:attribute name="nameOffice" type="List"/>
+	<aura:attribute name="nameMonth" type="List"/>
+	<aura:attribute name="listReminderYear" type="List"/>
+	<aura:attribute name="listEverageYear" type="List"/>
+	<aura:attribute name="rowTotal" type="Object[]" default="{}"/>
+	<aura:attribute name="espenseMonthsForYear" type="Object[]" default="{}"/>
+	<aura:attribute name="nameYear" type="String"/>
+	<!-- Аттрибуты для динамического заполнения таблицы -->
+
+	<!-- Аттрибут получения данных со страницы ExpnesePage -->
+	<aura:attribute name="users" type="Object[]" default="{}"/>
+	<!-- Аттрибут получения данных со страницы ExpnesePage -->
+
+    <!-- Атрибут сообщения -->
+    <aura:attribute name="message" type="String"/>
+	<!-- Атрибут сообщения -->
+
+	<!-- Данные для навигации между компонентами -->
+	<aura:attribute name="pageReference" type="Object"/>
+	<lightning:navigation aura:id="navService"/>
+	<!-- Данные для навигации между компонентами -->
+	
+	<div class="slds-box">
+		<div class="slds-theme_error">{!v.message}</div>
+		<table class="slds-table  slds-table_bordered slds-table_col-bordered">
+			<thead>
+				<tr class="slds-line-height_reset">
+
+					<th class="header-color" scope="colgroup" colspan="2">
+						<!-- <div class="slds-truncate" title="Regional Expenses"> -->
+							<span class="size-max">Regional Expenses {!v.nameYear} </span>
+							<lightning:buttonMenu alternativeText="Action" onselect="{! c.handleMenuSelect }" variant="container">
+								<aura:iteration var="action" items="{! v.listNameYear}">
+									<lightning:menuItem aura:id="actionMenuItems" label="{! action }" value="{! action}"/>
+								</aura:iteration>
+							</lightning:buttonMenu>
+						<!-- </div> -->
+					</th>
+
+					<aura:iteration items="{!v.nameOffice}" var="nameOffice">
+						<th class="header-color" scope="col">
+							<lightning:button class="slds-button_stretch size-max" variant="base" label="{!nameOffice}" title="{!nameOffice}" onclick="{! c.clickToOffice }" />
+						</th>
+					</aura:iteration>
+
+					<th class="summ-color" scope="col" rowspan="3">
+						<div class="slds-truncate" title="Summ"><span class="red-text size-max">Summ:</span></div>
+					</th>
+
+				</tr>
+				<tr class="slds-line-height_reset">
+
+					<th class="monthly-color" scope="col" rowspan="2">
+						<div class="slds-truncate" title="Month"><span class="blue-text size-max">Month</span></div>
+					</th>
+
+					<th class="balance-color" scope="row">
+						<div class="slds-truncate" title="Balance now:"><span class="red-text size-max">Balance now:</span></div>
+					</th>
+					
+					<aura:iteration items="{!v.listReminderYear}" var="listReminderYear">
+						<th class="balance-color">
+							<div class="slds-truncate size-max slds-align_absolute-center" >{!listReminderYear}</div>
+						</th>
+					</aura:iteration>
+
+				</tr>
+				<tr class="slds-line-height_reset">
+
+					<th class="summ-color" scope="row">
+						<div class="slds-truncate" title="Monthly average"><span class="red-text size-min">Monthly average</span></div>
+					</th>
+					
+					<aura:iteration items="{!v.listEverageYear}" var="listEverageYear">
+						<td class="summ-color">
+							<div class="slds-truncate text-weight slds-align_absolute-center" >{!listEverageYear}</div>
+						</td>
+					</aura:iteration>
+				</tr>
+
+			</thead>
+
+			<tbody>
+				<aura:iteration items="{!v.espenseMonthsForYear}" var="espenseMonthsForYear">
+					<tr class="slds-hint-parent slds-table_striped">
+						<td data-label="Account Id" colspan="2">
+							<div class="slds-truncate" title="{!espenseMonthsForYear.nameMonth}">{!espenseMonthsForYear.nameMonth}</div>
+						</td>
+						<aura:iteration items="{!espenseMonthsForYear.expenseMonth}" var="nameOffice">
+							<td class="">
+								<div class="slds-truncate" >{!nameOffice}</div>
+							</td>
+						</aura:iteration>
+						<td class="summ-color" data-label="Account Id">
+							<div class="slds-truncate text-weight" title="{!espenseMonthsForYear.summExpense}">{!espenseMonthsForYear.summExpense}</div>
+						</td>
+					</tr>
+				</aura:iteration>
+
+				<tr class="">
+					<th class="monthly-color" data-label="Account Id" colspan="2">
+						<div class="slds-truncate text-weight" title="{!v.rowTotal[0].nameMonth}">{!v.rowTotal[0].nameMonth}</div>
+					</th>
+					<aura:iteration items="{!v.rowTotal[0].expenseMonth}" var="nameOffice">
+						<th class="monthly-color">
+							<div class="slds-truncate text-weight slds-align_absolute-center" >{!nameOffice}</div>
+						</th>
+					</aura:iteration>
+					<th class="summ-color" data-label="Account Id">
+						<div class="slds-truncate text-weight slds-align_absolute-center" title="{!v.rowTotal[0].summExpense}">{!v.rowTotal[0].summExpense}</div>
+					</th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	
+</aura:component>	

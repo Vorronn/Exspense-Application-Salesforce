@@ -1,0 +1,170 @@
+<aura:component controller="ExpensesPageController" implements="flexipage:availableForAllPageTypes, lightning:isUrlAddressable, force:hasRecordId, force:appHostable" access="global">
+
+	<aura:handler name="init" value="{! this }" action="{! c.init }"/>
+	<aura:handler event="force:refreshView" action="{! c.init}" />
+
+	<!-- Аттрибуты для заполнения табов -->
+	<aura:attribute name="rowTotal" type="Object[]" default="{}"/>
+	<aura:attribute name="espenseMonthsForYear" type="Object[]" default="{}"/>
+	<aura:attribute name="listCard" type="Object[]" default="{}"/>
+	<!-- Аттрибуты для заполнения табов -->
+
+	<!-- Аттрибуты для заполнения header -->
+	<aura:attribute name="balance" type="Decimal" />
+	<aura:attribute name="nameLogin" type="String" />
+	<!-- Аттрибуты для заполнения header -->
+
+	<!--Атрибуты для создания таблицы -->
+	<aura:attribute name="expenseCard" type="Object[]" default="{}"/>
+	<aura:attribute name="columns" type="List"/>
+	<aura:attribute name="errors" type="Object" default="[]"/>
+	<aura:attribute name="draftValues" type="Object" default="[]"/>
+	<aura:attribute name="data" type="Object"/>
+	<!--Атрибуты для создания таблицы -->
+
+	<!-- Аттрибуты для определения текущего месяца -->
+	<aura:attribute name="nameMonths" type="List"/>
+	<aura:attribute name="currentMonth" type="Integer"/>
+	<!-- Аттрибуты для определения текущего месяца -->
+	<!-- Аттрибуты для входных данных -->
+	<aura:attribute name="users" type="Object[]" default="{}"/>
+	<aura:attribute name="truthy" type="boolean"/>
+	<aura:attribute name="listNameYear" type="List" />
+	<!-- Аттрибуты для входных данных -->
+	<!-- Для навигации -->
+	<lightning:navigation aura:id="navService"/>
+	<aura:attribute name="pageReference" type="Object"/>
+	<!-- Для навигации -->
+
+	<div class="slds-box">
+		<!-- Header компонента -->
+		<div>
+			<div class="slds-grid slds-wrap header slds-theme_shade slds-p-vertical_medium slds-p-horizontal_medium">
+				<div class="slds-col slds-size_3-of-12">
+					<div class="page-section page-header slds-align_absolute-left">
+						<h1 class="slds-text-heading_medium">Expenses {!v.nameLogin}</h1>
+					</div>
+				</div>
+				<div class="slds-col slds-size_6-of-12">
+					<!-- Название компонента -->
+					<div class="page-section page-header slds-align_absolute-center">
+						<h1 class="slds-text-heading_medium">Balance: {!v.balance} $</h1>
+					</div>
+					<!-- Название компонента -->
+				</div>
+				<div class="slds-col slds-size_3-of-12">
+					<div class="slds-float_right">
+						<aura:renderIf isTrue="{!v.truthy}">
+							<lightning:button label="Income" title="Income" iconName="utility:arrowdown" onclick="{! c.clickIncome }" />
+							<lightning:button label="New Expense" title="New Expense" onclick="{! c.clickNewExpenses }" />
+							<aura:set attribute="else">
+								<lightning:button class="slds-button_stretch" iconName="utility:back" label="Back to admin page" title="Back" onclick="{! c.clickBackAdminPage }" />
+							</aura:set>
+						</aura:renderIf> 
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Header компонента -->
+
+		<!-- tabs -->
+		<div class="slds-grid slds-wrap main slds-theme_default slds-p-horizontal_medium">
+			<div class="slds-col slds-size_3-of-12 slds-border_right">
+
+				<div>
+					<nav class="slds-nav-vertical">
+						<div class="slds-nav-vertical__section">
+							<div class="slds-grid slds-wrap">
+								<div class="slds-col slds-size_4-of-12">
+									<h2 id="entity-header" class="slds-nav-vertical__title">MONTHS</h2>
+								</div>
+								<div class="slds-col slds-size_4-of-12">
+									<h2 id="entity-header" class="slds-nav-vertical__title">Amount</h2>
+								</div>
+								<div class="slds-col slds-size_4-of-12">
+									<h2 id="entity-header" class="slds-nav-vertical__title">Income</h2>
+								</div>
+							</div>
+							<div class="slds-grid slds-grid--vertical slds-navigation-list--vertical">
+								<ul aria-describedby="entity-header" onclick="{!c.clickTab}">
+									<aura:iteration items="{!v.espenseMonthsForYear}" var="nameMonth">
+										<li class="{!nameMonth.active ? 'slds-is-active' : ''}">
+											<div class="slds-nav-vertical__item">
+												<a href="javascript:void(0);" data-menu-item-id="{!nameMonth.nameMonths}" class="slds-navigation-list--vertical__action slds-nav-vertical__action slds-text-link--reset slds-col_bump-right" >
+													<span class="slds-size_1-of-3" data-menu-item-id="{!nameMonth.nameMonths}">{!nameMonth.nameMonths}</span>
+													<span class="slds-size_1-of-3 slds-align_absolute-center" data-menu-item-id="{!nameMonth.nameMonths}">
+														<span class="slds-badge" data-menu-item-id="{!nameMonth.nameMonths}"> {!nameMonth.amount} </span>
+													</span>
+													<span class="slds-size_1-of-3 slds-align_absolute-center" data-menu-item-id="{!nameMonth.nameMonths}">
+														<span class="slds-badge" data-menu-item-id="{!nameMonth.nameMonths}"> {!nameMonth.income} </span>
+													</span>
+												</a>
+											</div>
+										</li>
+									</aura:iteration>
+								</ul>
+							</div>
+							<div class="slds-button_full-width slds-theme_shade">
+								<div class="slds-size_1-of-3 slds-align_absolute-center slds-theme_shade">{!v.rowTotal[0].nameMonths}</div>
+								<div class="slds-size_1-of-3 slds-align_absolute-center slds-theme_shade">
+									<span class=""> {!v.rowTotal[0].amount} </span>
+								</div>
+								<div class="slds-size_1-of-3 slds-align_absolute-center slds-theme_shade">
+									<span class=""> {!v.rowTotal[0].income} </span>
+								</div>
+							</div>
+						</div>
+
+					</nav>
+				</div>
+		<!-- tabs -->
+		<!-- Accordion section -->
+			</div>
+			<div class="slds-col slds-size_9-of-12" style="height: 550px">
+				<aura:iteration items="{!v.listCard}" var="nameMonth">
+					<div class="{!nameMonth.active ? 'slds-is-collapsed' : ''}">
+						
+						<lightning:accordion class="{!nameMonth.active ? 'slds-hidden' : ''}">
+							<aura:iteration items="{!nameMonth.listExpenseCardMonths}" var="expense" indexVar="ind">
+								<lightning:accordionSection name="{!ind}" label="{!expense.nameDay}">
+									<lightning:datatable    keyField="Id"
+									data="{!expense.listExpense}"
+									columns="{!v.columns}"
+									showRowNumberColumn="true"
+									hideCheckboxColumn="true"
+									resizeColumnDisabled="true"
+									draftValues="{! v.draftValues }"
+									onsave="{! c.handleSaveEdition  }"
+									onrowaction="{! c.handleRowAction }"
+									/>
+								</lightning:accordionSection>
+							</aura:iteration>
+						</lightning:accordion>
+					</div>
+				</aura:iteration>  
+			</div>
+		</div>
+		<!-- Accordion section -->
+
+		<!-- Кнопки для выбора года отображения -->
+		<div class="slds-grid slds-wrap footer slds-theme_default slds-m-top_none slds-p-vertical_medium slds-p-horizontal_medium">
+			<div class="slds-col slds-size_3-of-12">
+				<div class="slds-text-align_left">
+					<h2 style="color:black" class="slds-text-heading_small">Years</h2>
+				</div>
+				<lightning:buttonGroup class="slds-button_full-width">
+					<lightning:button aura:id ="button1" class="slds-button_first slds-button_stretch" label="{!v.listNameYear[3]}" onclick="{!c.clickNumberYear}"/>
+					<lightning:button aura:id ="button2" class="slds-button_middle slds-button_stretch" label="{!v.listNameYear[2]}" onclick="{!c.clickNumberYear}"/>
+					<lightning:button aura:id ="button3" class="slds-button_middle slds-button_stretch" label="{!v.listNameYear[1]}" onclick="{!c.clickNumberYear}"/>
+					<lightning:button aura:id ="button4" class="slds-button_last slds-button_stretch slds-button_dual-stateful slds-is-pressed" label="{!v.listNameYear[0]}" onclick="{!c.clickNumberYear}"/>
+				</lightning:buttonGroup>
+			</div>
+			<div class="slds-col slds-size_9-of-12">
+
+			</div>
+		</div>
+		<!-- Кнопки для выбора года отображения -->
+	</div>
+	
+</aura:component>	

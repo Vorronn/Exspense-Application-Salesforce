@@ -1,26 +1,31 @@
-<aura:component implements="flexipage:availableForAllPageTypes, lightning:isUrlAddressable" access="global">
-    <aura:attribute name="pageReference" type="Object"/>
-    <aura:handler name="init" value="{! this }" action="{! c.init }"/>
+<aura:component controller="LoginController" implements="flexipage:availableForAllPageTypes, lightning:isUrlAddressable" access="global">
+	<aura:handler name="init" value="{! this }" action="{! c.init }"/>
+    <!-- Данные для навигации между компонентами -->
+	<aura:attribute name="pageReference" type="Object"/>
 	<lightning:navigation aura:id="navService"/>
-
-	<div class="slds-theme_info slds-p-vertical_xx-large">
+	<!-- Данные для навигации между компонентами -->
+	
+	<!-- <div class="slds-theme_info slds-p-vertical_xx-large"> -->
 		<div class="slds-card slds-container--center slds-container--small">
 			<div class="slds-box slds-box_xx-small slds-theme_default">
 				<!-- Название компонента -->
 				<div class="slds-m-horizontal_xx-large slds-m-bottom_xx-large">
+					<!-- Название компонента -->
 					<div class="page-section page-header slds-align_absolute-center">
 						<h1 class="slds-text-heading_medium slds-m-bottom_medium">Expenses</h1>
 					</div>
 					<!-- Название компонента -->
+					<!-- Форма заполнения -->
 					<div class="slds-m-top_medium">
-						<lightning:input type="email" name="inputEmail" placeholder="Enter your username" label="Login"/>
-						<lightning:input type="password" label="Password" name="inputPassword" placeholder="Password"/>
+						<lightning:input aura:id="loginEmail" type="email" name="inputEmail" placeholder="Enter your username" label="Login"/>
+						<lightning:input aura:id="inputPassword" type="password" label="Password" name="inputPassword" placeholder="Password"/>
 					</div>
 					<div class="slds-m-top_large">
-						<lightning:button class="slds-button_stretch" variant="brand" label="Login" title="Brand action" onclick="{! c.handleClick }" />
+						<lightning:button class="slds-button_stretch" variant="brand" label="Login" title="Brand action" onclick="{! c.loginClick }" />
 					</div>
+					<!-- Форма заполнения -->
 				</div>
 			</div>
 		</div>
-	</div>
+	<!-- </div> -->
 </aura:component>	
